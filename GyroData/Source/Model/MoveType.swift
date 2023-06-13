@@ -8,9 +8,9 @@ enum MoveType {
     var description: String {
         switch self {
         case .accelerometer:
-            return "accelerometer"
+            return "Accelerometer"
         case .gyro:
-            return "gyro"
+            return "Gyro"
         }
     }
 }

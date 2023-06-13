@@ -92,15 +92,31 @@ final class MainViewController: UIViewController {
 
 extension MainViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView,
-                   leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+                   trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         return UISwipeActionsConfiguration(actions: [
-            makeDeleteContextualAction(forRowAt: indexPath)
+            makeContextualAction(title: "Delete",
+                                 completion: {
+                                     self.mainViewModel.MoveDataList.remove(at: indexPath.row)
+                                     self.applySnapshot(moveDataList: self.mainViewModel.MoveDataList)
+                                 }),
+            makeContextualAction(style: .normal,
+                                 title: "Play",
+                                 color: .systemGreen, completion: {
+                                     print("play")
+                                 })
         ])
     }
     
-    private func makeDeleteContextualAction(forRowAt indexPath: IndexPath) -> UIContextualAction {
-        return UIContextualAction(style: .destructive, title: "Delete") { _, _, _ in
-            print("delete \(indexPath.row)")
+    private func makeContextualAction(style: UIContextualAction.Style = .destructive,
+                                            title: String,
+                                            color: UIColor = .systemRed,
+                                            completion: @escaping () -> Void) -> UIContextualAction {
+        let swipeAction = UIContextualAction(style: style,
+                                             title: title) { _, _, _ in
+            completion()
         }
+        swipeAction.backgroundColor = color
+        
+        return swipeAction
     }
 }
